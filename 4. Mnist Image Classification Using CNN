@@ -1,0 +1,99 @@
+MNIST IMAGE CLASSIFICATION USING CNN
+Aim:
+
+To implement a Convolutional Neural Network (CNN) for classifying handwritten digits from the 
+MNIST dataset and evaluate its performance in accurately predicting digit labels.
+Procedure:
+
+ Install Required Libraries:
+ Ensure that the necessary libraries such as Keras, TensorFlow, or PyTorch are installed:
+o pip install keras
+o pip install tensorflow
+o pip install torch torchvision
+ Load the MNIST Dataset:
+ The MNIST dataset, which contains 60,000 training images and 10,000 test images of handwritten 
+digits (0-9), is available in most deep learning libraries.
+ Load the dataset and split it into training and testing sets.
+from keras.datasets import mnist
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
+ Preprocess the Data:
+ Reshape the input images to include a channel dimension (as CNNs expect a 3D input shape: width, 
+height, and channels).
+ Normalize the pixel values between 0 and 1 by dividing by 255.
+ Convert the labels into one-hot encoded vectors.
+X_train = X_train.reshape(X_train.shape[0], 28, 28, 1).astype('float32') / 255
+X_test = X_test.reshape(X_test.shape[0], 28, 28, 1).astype('float32') / 255
+
+from keras.utils import to_categorical
+y_train = to_categorical(y_train, 10)
+y_test = to_categorical(y_test, 10)
+ Build the CNN Model:
+ Define a CNN architecture with convolutional layers for feature extraction, pooling layers for 
+downsampling, and fully connected layers for classification.
+ A simple architecture might include:
+o Convolutional layers with filters to extract image features.
+o Max pooling layers to reduce the spatial dimensions.
+o A fully connected (dense) layer followed by a softmax output layer for classification.
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+model = Sequential()
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
+model.add(MaxPooling2D((2, 2)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dense(10, activation='softmax'))
+ Compile the Model:
+ Define the optimizer, loss function, and metrics for model evaluation.
+ The categorical crossentropy loss function is suitable for multi-class classification, and the Adam 
+optimizer is commonly used for efficient training.
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+ Train the Model:
+ Train the CNN on the training data using the fit method, specifying the number of epochs, batch size, 
+and validation data.
+
+model.fit(X_train, y_train, epochs=10, batch_size=128, validation_data=(X_test, y_test))
+ Evaluate the Model:
+ After training, evaluate the model on the test dataset to determine its accuracy in predicting unseen digit 
+images.
+test_loss, test_acc = model.evaluate(X_test, y_test)
+print('Test accuracy:', test_acc)
+ Visualize the Results:
+ Optionally, plot the accuracy and loss curves to monitor training progress and detect signs of 
+overfitting.
+ You can also visualize misclassified images to understand where the model makes errors.
+PROGRAM:
+importnumpy as np
+importkeras
+fromkeras.datasets importmnist fromkeras.models 
+importModel fromkeras.layers importDense, Input
+fromkeras.layers importConv2D, MaxPooling2D, Dropout, Flattenfromkeras importbackend as k
+(x_train, y_train), (x_test, y_test) = mnist.load_data()img_rows, img_cols=28, 28
+ifk.image_data_format() =='channels_first':
+x_train =x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)x_test 
+=x_test.reshape(x_test.shape[0], 1, img_rows, img_cols) inpx =(1, img_rows, img_cols)
+else:
+x_train =x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)x_test 
+=x_test.reshape(x_test.shape[0], img_rows, img_cols, 1) inpx =(img_rows, img_cols, 1)
+x_train =x_train.astype('float32')x_test 
+=x_test.astype('float32') x_train /=255
+x_test /=255
+
+inpx =Input(shape=inpx)
+layer1 =Conv2D(32, kernel_size=(3, 3), activation='relu')(inpx)layer2 =Conv2D(64, (3, 3),
+activation='relu')(layer1)
+layer3 =MaxPooling2D(pool_size=(3, 3))(layer2)layer4
+=Dropout(0.5)(layer3)
+layer5 =Flatten()(layer4)
+layer6 =Dense(250, activation='sigmoid')(layer5)layer7 =Dense(10, 
+activation='softmax')(layer6) model =Model([inpx], layer7)
+model.compile(optimizer=keras.optimizers.Adadelta(), loss=keras.losses.categorical_crossentropy,
+metrics=['accuracy'])
+model.fit(x_train, y_train, epochs=12, batch_size=500)score
+=model.evaluate(x_test, y_test, verbose=0)
+print('loss=', score[0]) print('accuracy=',score[1])
+
+OUTPUT:
+Loss = 0.029
+accuracy = 0.991

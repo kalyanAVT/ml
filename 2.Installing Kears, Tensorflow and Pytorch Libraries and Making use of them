@@ -1,0 +1,112 @@
+Installing Kears,Tensorflow and pytorch libraries and making use of them.
+
+Aim:
+
+To install the Keras, TensorFlow, and PyTorch libraries and explore their use in building and training deep 
+learning models.
+Procedure:
+
+1. Install the Libraries:
+
+o Open a terminal or command prompt.
+o Use pip to install the required libraries:
+ pip install keras
+ pip install tensorflow
+ pip install torch
+2. Verify the Installation:
+
+o After installing, verify the installations by importing the libraries in a Python script or Jupyter 
+notebook:
+import keras
+import tensorflow as tf
+import torch
+o Ensure no errors occur when running these import statements.
+3. Using Keras:
+
+o Keras is typically used as an interface for TensorFlow.
+o Start by defining a sequential or functional model, compile the model, and fit it to your dataset.
+ Example:
+from keras.models import Sequential
+from keras.layers import Dense
+model = Sequential()
+model.add(Dense(64, input_dim=10, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.fit(X_train, y_train, epochs=10, batch_size=32)
+
+4. Using TensorFlow:
+
+o TensorFlow can be used to build more complex models using both high-level (Keras) and lowlevel APIs.
+o Define a model using tf.keras or create custom models using TensorFlow's computational graph.
+ Example:
+import tensorflow as tf
+model = tf.keras.Sequential([
+ tf.keras.layers.Dense(64, activation='relu'),
+ tf.keras.layers.Dense(1, activation='sigmoid')
+])
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.fit(X_train, y_train, epochs=10, batch_size=32)
+
+5. Using PyTorch:
+
+o PyTorch is known for its dynamic computational graph, making it easier to debug and 
+experiment with.
+o Build neural networks using the torch.nn module and train the model with an optimizer and loss 
+function.
+ Example:
+import torch
+import torch.nn as nn
+import torch.optim as optim
+class SimpleModel(nn.Module):
+ def __init__(self):
+ super(SimpleModel, self).__init__()
+ self.fc1 = nn.Linear(10, 64)
+ self.fc2 = nn.Linear(64, 1)
+ def forward(self, x):
+ x = torch.relu(self.fc1(x))
+ x = torch.sigmoid(self.fc2(x))
+ return x
+model = SimpleModel()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+loss_fn = nn.BCELoss()
+# Train the model with data
+# optimizer.zero_grad()
+# output = model(X_train)
+# loss = loss_fn(output, y_train)
+# loss.backward()
+# optimizer.step()
+
+6. Evaluate and Analyze:
+
+o After training the models, evaluate their performance on test datasets and compare the results.
+o Use appropriate metrics like accuracy, precision, recall, or any other suitable for the task
+Program:
+from numpy import loadtxt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+# load the dataset
+dataset = loadtxt('pima-indians-diabetes.csv', delimiter=',')
+# split into input (X) and output (y) variables
+X = dataset[:,0:8]
+y = dataset[:,8]
+# define the keras model
+model = Sequential()
+model.add(Dense(12, input_shape=(8,), activation='relu'))
+model.add(Dense(8, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+# compile the keras model
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+# fit the keras model on the dataset
+model.fit(X, y, epochs=150, batch_size=10, verbose=0)
+# make class predictions with the model
+predictions = (model.predict(X) > 0.5).astype(int)
+# summarize the first 5 cases
+for i in range(5):
+print('%s => %d (expected %d)' % (X[i].tolist(), predictions[i], y[i]))
+
+OUTPUT:
+
+[6.0, 148.0, 72.0, 35.0, 0.0, 33.6, 0.627, 50.0] => 1 (expected 1)
+[1.0, 85.0, 66.0, 29.0, 0.0, 26.6, 0.351, 31.0] => 0 (expected 0) [8.0, 183.0, 64.0, 0.0, 0.0, 23.3, 0.672, 32.0] => 1 (expected 1)
+[1.0, 89.0, 66.0, 23.0, 94.0, 28.1, 0.167, 21.0] => 0 (expected 0)
+[0.0, 137.0, 40.0, 35.0, 168.0, 43.1, 2.288, 33.0] => 1 (expected 1)

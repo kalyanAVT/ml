@@ -1,0 +1,101 @@
+Setting up the spyder IDE Environment and executing a python program
+Aim:
+
+To install and configure the Spyder IDE environment, and to execute a Python program.
+Procedure:
+
+STEP 1: Installing Anaconda Distribution
+
+Why Anaconda? Anaconda is a Python distribution that comes with many packages pre-installed (such as 
+NumPy, SciPy, Pandas, Matplotlib, etc.), and it includes the Spyder IDE by default.
+1. Download Anaconda:
+      Go to the official Anaconda website: https://www.anaconda.com/products/individual
+  o Click on the “Download” button and choose the version suitable for your operating system 
+  (Windows, macOS, Linux).
+2. Install Anaconda:
+    Open the downloaded installer file.
+    Follow the installation wizard instructions:
+ Select whether you want to install Anaconda for all users or just yourself.
+ Choose the installation location.
+ Add Anaconda to the system PATH (optional, but recommended for ease of use).
+    Click "Install" to proceed, and wait for the installation to finish.
+3. Verify Installation:
+    Open Anaconda Navigator from your start menu (Windows) or applications folder (macOS).
+    Alternatively, you can verify via the command line by typing:
+conda --version
+
+STEP 2: Launching Spyder IDE
+
+1. Open Anaconda Navigator:
+    Once installed, search for "Anaconda Navigator" in your system and open it.
+    Anaconda Navigator will provide a graphical user interface (GUI) for managing environments 
+    and applications.
+2. Launch Spyder:
+   In Anaconda Navigator, locate the Spyder icon.
+   Click on “Launch” next to the Spyder icon to start the Spyder IDE.
+
+STEP 3: Writing and Executing a Python Program
+
+Now that the environment is set up, let's write and execute a Python program.
+1. Write a Python Program:
+   Once Spyder is open, you will see the code editor in the center.
+   Type the following sample Python code:
+
+print("Hello world!")
+a = 5
+b = 10
+sum = a + b
+print(f"The sum of {a} and {b} is {sum}")
+
+2. Save the Program:
+   Click on the "Save" button in the toolbar or press Ctrl + S (Windows/Linux) or Cmd + S (Mac).
+   Save the file with a .py extension, e.g., sample_program.py.
+3. Execute the Python Program:
+   To execute the program, click on the "Run" button in the toolbar or press F5.
+   The console (typically at the bottom of the window) will display the output:
+
+   Hello, World!
+  The sum of 5 and 10 is 15
+
+STEP 4: Exploring Spyder Features
+
+1. Variable Explorer:
+    You can monitor the values of variables in your program using the Variable Explorer.
+    It is located on the right side of the Spyder window and will show you the variables (e.g., a, b, 
+sum) and their values.
+2. Help Pane:
+    Spyder provides an integrated help pane that gives access to documentation.
+    Simply type a function or module name in the help pane to get quick documentation without 
+leaving the IDE.
+3. Plots (Optional):
+    If your program involves plotting, Spyder can display plots directly in the interface.
+    Try adding a simple plot using Matplotlib:
+  import matplotlib.pyplot as plt
+  x = [1, 2, 3, 4]
+  y = [10, 20, 25, 30]
+  plt.plot(x, y)
+  plt.show()
+4. Debugging:
+    Spyder has a built-in debugger that allows you to step through code, inspect variables, and fix 
+issues.
+    You can set breakpoints by clicking next to the line numbers and then running the script in 
+debugging mode (press Ctrl + F5).
+
+STEP 5: Additional Configurations (Optional)
+
+1. Package Management:
+    You can install additional Python packages using Anaconda Navigator or via the terminal using:
+conda install <package_name>
+    Alternatively, use pip within the terminal:
+pip install <package_name>
+2. Creating Virtual Environments (Optional but Recommended):
+    You can create isolated environments for different projects to avoid conflicts between packages.
+    To create a new environment:
+conda create --name myenv
+    To activate it:
+  conda activate myenv
+
+OUTPUT:
+
+  Hello, World!
+  The sum of 5 and 10 is 15

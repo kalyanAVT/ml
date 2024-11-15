@@ -1,0 +1,175 @@
+CNN FOR IMAGE CLASSIFICATION
+AIM:
+
+To design and implement a Convolutional Neural Network (CNN) for image classification tasks, and to 
+evaluate its performance in accurately classifying images from a given dataset.
+Procedure:
+
+1. Install Required Libraries:
+o Ensure the necessary libraries such as Keras, TensorFlow, or PyTorch are installed:
+ pip install keras
+ pip install tensorflow
+ pip install torch torchvision
+2. Load the Dataset:
+o Select a standard image classification dataset such as MNIST, CIFAR-10, or a custom dataset.
+o In Keras, TensorFlow, or PyTorch, you can load a dataset directly or preprocess your own 
+images.
+Example (using CIFAR-10 in Keras):
+from keras.datasets import cifar10
+(X_train, y_train), (X_test, y_test) = cifar10.load_data()
+3. Preprocess the Data:
+o Normalize the pixel values (usually between 0 and 1) by dividing by 255.
+o Convert the labels to categorical format if needed.
+o Split the data into training and validation sets if necessary.
+X_train = X_train.astype('float32') / 255.0
+X_test = X_test.astype('float32') / 255.0
+# One-hot encode the labels
+from keras.utils import to_categorical
+y_train = to_categorical(y_train, 10)
+
+y_test = to_categorical(y_test, 10)
+4. Build the CNN Model:
+o Define a CNN architecture using layers such as convolutional layers, pooling layers, and fully 
+connected (dense) layers.
+o A basic CNN architecture includes:
+ Convolutional layers (with filters to detect features)
+ Pooling layers (to reduce dimensionality)
+ Dense layers (to classify based on learned features)
+o Example of a simple CNN using Keras:
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+model = Sequential()
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
+model.add(MaxPooling2D((2, 2)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2)))
+model.add(Flatten())
+model.add(Dense(64, activation='relu'))
+model.add(Dense(10, activation='softmax'))
+5. Compile the Model:
+o Define the optimizer, loss function, and evaluation metric(s) for the model.
+o Example:
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+6. Train the Model:
+o Train the model using the training dataset.
+o Specify the number of epochs, batch size, and validation data.
+model.fit(X_train, y_train, epochs=10, batch_size=64, validation_data=(X_test, y_test))
+7. Evaluate the Model:
+o After training, evaluate the model on the test dataset to determine its performance.
+o Use accuracy or other suitable metrics to measure how well the model classifies the images.
+test_loss, test_acc = model.evaluate(X_test, y_test)
+8. Analyze the Results:
+o Visualize training/validation accuracy and loss to check for any signs of underfitting or 
+overfitting.
+o Optionally, use confusion matrices or other metrics to evaluate the model’s classification 
+performance.
+
+PROGRAM:
+
+import numpy as np
+import pandas as pd
+import os
+from pathlib import Path
+import glob
+import seaborn as sns
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras import layersfrom
+tensorflow.keras import Model
+from tensorflow.keras.optimizers import RMSprop
+from keras_preprocessing.image import ImageDataGenerator
+data_dir = Path('../input/cat-and-dog') # data directory
+train_dir = data_dir / "training_set/training_set"test_dir =
+data_dir / "test_set/test_set"
+cat_samples_dir_train = train_dir / "cats" # directory for cats images
+dog_samples_dir_train = train_dir / "dogs" # directory for dogs images
+12
+def make_csv_with_image_labels(CATS_PATH, DOGS_PATH):
+'''
+Function for making a dataframe that contains images path as well as their labels.Parameters:-
+- CATS_PATH - Path for Cats Images
+- DOGS_PATH - Path for Dogs Images
+Output:-
+It simply returns dataframe'''
+cat_images = CATS_PATH.glob('*.jpg')
+dog_images = DOGS_PATH.glob('*.jpg') df
+= []
+for i in cat_images:
+df.append((i, 0)) # appending cat images as 0for j in
+dog_images:
+df.append((i, 1)) # appending dog images as 0
+df = pd.DataFrame(df, columns=["image_path", "label"], index = None) # convertinginto dataframe
+df = df.sample(frac = 1).reset_index(drop=True)return df
+train_csv = make_csv_with_image_labels(cat_samples_dir_train,dog_samples_dir_train)
+train_csv.head()
+Now, we will visualize the number of images for each class.
+13
+len_cat = len(train_csv["label"][train_csv.label == 0]) len_dog = 
+len(train_csv["label"][train_csv.label == 1])arr = np.array([len_cat ,
+len_dog])
+labels = ['CAT', 'DOG']
+print("Total No. Of CAT Samples :- ", len_cat)
+print("Total No. Of DOG Samples :- ", len_dog)
+plt.pie(arr, labels=labels, explode = [0.2,0.0] , shadow=True)plt.show()
+def get_train_generator(train_dir, batch_size=64, target_size=(224, 224)):'''
+Function for preparing training data'''
+train_datagen = ImageDataGenerator(rescale = 1./255., # normalizing the imagerotation_range
+= 40,
+width_shift_range = 0.2,
+height_shift_range = 0.2,
+shear_range = 0.2,
+zoom_range = 0.2,
+horizontal_flip = True)
+train_generator = train_datagen.flow_from_directory(train_dir,batch_size =
+batch_size,
+color_mode='rgb', class_mode 
+= 'binary', target_size =
+target_size)return
+train_generator
+train_generator = get_train_generator(train_dir)
+Output: - Found 8005 images belonging to 2 classes.
+Now, we will prepare the testing data,
+def get_testgenerator(test_dir,batch_size=64, target_size=(224,224)):'''
+Function for preparing testing data'''
+test_datagen = ImageDataGenerator( rescale = 1.0/255. ) test_generator =
+test_datagen.flow_from_directory(test_dir,batch_size = batch_size,
+color_mode='rgb', class_mode
+= 'binary', target_size =
+
+target_size)return test_generator
+test_generator = get_testgenerator(test_dir)
+model = tf.keras.Sequential([
+layers.Conv2D(64, (3,3), strides=(2,2),padding='same',input_shape=
+(224,224,3),activation = 'relu'),
+layers.MaxPool2D(2,2),
+layers.Conv2D(128, (3,3), strides=(2,2),padding='same',activation = 'relu'),layers.MaxPool2D(2,2),
+layers.Conv2D(256, (3,3), strides=(2,2),padding='same',activation = 'relu'),layers.MaxPool2D(2,2),
+layers.Flatten(),
+layers.Dense(158, activation ='relu'), layers.Dense(256, 
+activation = 'relu'), layers.Dense(128, activation = 'relu'),
+layers.Dense(1, activation = 'sigmoid'),
+])
+model.summary()
+model.compile(optimizer=RMSprop(lr=0.001), loss='binary_crossentropy',
+metrics=['acc'])
+history = model.fit_generator(train_generator,epochs=15,
+verbose=1,
+validation_data=test_generator)
+mport matplotlib.image as mpimg import 
+matplotlib.pyplot as plt
+acc=history.history['acc']
+val_acc=history.history['val_acc']
+loss=history.history['loss']
+val_loss=history.history['val_loss']
+epochs=range(len(acc))
+plt.plot(epochs, acc, 'r', "Training Accuracy") plt.plot(epochs,
+val_acc, 'b', "Validation Accuracy")plt.title('Training and 
+validation accuracy') plt.figure()
+plt.plot(epochs, loss, 'r', "Training Loss") plt.plot(epochs,
+val_loss, 'b', "Validation Loss")plt.title('Training and
+validation loss')
+
+model.save('my_model.h5') # saving the trained model
+new_model = tf.keras.models.load_model('./my_model.h5') # loading the trained model
+
+OUTPUT:
